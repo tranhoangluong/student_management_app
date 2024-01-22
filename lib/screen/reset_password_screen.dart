@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:student_management_app/service/auth.dart';
 import 'package:student_management_app/service/validate.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -21,32 +21,27 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _showMyDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('AlertDialog Title'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
+  Future<void> resetPassword() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    try {
+      await auth.sendPasswordResetEmail(email: usernameController.text.trim());
+    } on FirebaseAuthException catch (error) {
+      print(error);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Đã gửi email đặt lại mật khẩu'),
+              content: const Text('Vui lòng kiểm tra!'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
               ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+            );
+          });
+    }
   }
 
   @override
@@ -75,9 +70,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                   InkWell(
                     onTap: () async {
-                      await Auth.resetPassword(
-                          email: usernameController.text.trim());
-                      await _showMyDialog();
+                      if (usernameController.text.isEmpty) {
+                        return;
+                      } else {
+                        await resetPassword();
+                      }
                     },
                     child: Container(
                       margin: const EdgeInsets.all(10),
