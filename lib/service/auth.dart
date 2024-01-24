@@ -62,8 +62,12 @@ class Auth {
     return refreshedUser;
   }
 
-  // static Future<void> resetPassword({required String email}) async {
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   await auth.sendPasswordResetEmail(email: email);
-  // }
+  static Future<void> signOut() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    await auth.signOut();
+  }
+// static Future<void> resetPassword({required String email}) async {
+//   FirebaseAuth auth = FirebaseAuth.instance;
+//   await auth.sendPasswordResetEmail(email: email);
+// }
 }

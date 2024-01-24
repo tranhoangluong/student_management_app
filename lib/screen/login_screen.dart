@@ -40,7 +40,7 @@ class LoginScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.only(left: 10, right: 10),
                 padding: const EdgeInsets.all(10),
-                height: height / 3,
+                height: height / 2.5,
                 width: width,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -88,22 +88,24 @@ class _LoginFormState extends State<LoginForm> {
           children: [
             TextFormField(
               controller: usernameController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) => Validator.validateEmail(email: value!),
               decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.person,
                     color: Colors.black,
                   ),
-                  hintText: 'User name',
+                  hintText: 'Tên đăng nhập',
                   hintStyle: TextStyle(color: Colors.black)),
             ),
             TextFormField(
               controller: passwordController,
               obscureText: passwordSecure,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) =>
                   Validator.validatePassword(password: value!),
               decoration: InputDecoration(
-                  hintText: 'Password',
+                  hintText: 'Mật khẩu',
                   hintStyle: const TextStyle(color: Colors.black),
                   prefixIcon: const Icon(
                     Icons.key,
@@ -131,7 +133,7 @@ class _LoginFormState extends State<LoginForm> {
                     password: passwordController.text,
                     context: context,
                   );
-                  if (user != null) {
+                  if (user != null || usernameController.text.isNotEmpty) {
                     navigator.pushNamed(HomeScreen.routeName);
                   }
                 }
