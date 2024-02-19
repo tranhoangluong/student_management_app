@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:student_management_app/database/sqlite_controller.dart';
 import 'package:student_management_app/model/student_model.dart';
 
@@ -29,8 +31,11 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           TextButton(
-              onPressed: () {
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
                 Auth.signOut();
+                prefs.remove('email');
+                prefs.remove('password');
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const LoginScreen(),
                 ));
